@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BittLabs — Digital Product Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* Base */
+  --bg:        #F7F6F3;
+  --surface:   #FFFFFF;
+  --border:    #E4E2DC;
+  --border-2:  #D4D1C8;
+  --text:      #1A1916;
+  --body:      #4A4844;
+  --muted:     #9B9892;
+  --brand:     #1F2D40;
+  --brand-bg:  #EBF0F7;
+  /* Products */
+  --igrejavia: #2D6A4F;
+  --sola:      #5C4A1E;
+  --trainly:   #1A3A5C;
+  --clinicly:  #3D5A6B;
+  /* Products RGB */
+  --igrejavia-rgb: 45, 106, 79;
+  --sola-rgb:      92, 74, 30;
+  --trainly-rgb:   26, 58, 92;
+  --clinicly-rgb:  61, 90, 107;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  line-height:1.65;
+  background:var(--bg);
+  color:var(--body);
+  overflow-x:hidden;
+}
+
+/* ── TYPOGRAPHY ── */
+.serif{font-family:'Instrument Serif',serif;font-weight:400}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:68px;padding:0 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+nav.scrolled{
+  background:rgba(247,246,243,0.94);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav-logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.7rem;color:var(--brand);
+  text-decoration:none;letter-spacing:-0.02em;line-height:1;
+  display:flex;flex-direction:column;gap:2px;
+}
+nav:not(.scrolled) .nav-logo{color:#fff}
+nav:not(.scrolled) .nav-logo-sub{color:rgba(255,255,255,0.4)}
+
+.nav-logo-sub{
+  font-family:'DM Sans',sans-serif;
+  font-size:0.6rem;font-weight:500;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--muted);line-height:1;
+  transition:color 0.4s ease;
+}
+
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{
+  font-size:13px;font-weight:500;
+  letter-spacing:0.02em;color:var(--muted);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+nav:not(.scrolled) .nav-links a{color:rgba(255,255,255,0.5)}
+nav:not(.scrolled) .nav-links a:hover{color:#fff}
+.nav-links a:hover{color:var(--text)}
+
+.nav-right{display:flex;align-items:center;gap:14px}
+
+/* lang toggle */
+.lang-toggle{
+  display:flex;align-items:center;gap:3px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;padding:3px;
+}
+nav:not(.scrolled) .lang-toggle{
+  background:rgba(255,255,255,0.1);
+  border-color:rgba(255,255,255,0.15);
+}
+.lang-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  font-size:11px;font-weight:600;letter-spacing:0.06em;
+  cursor:pointer;
+  transition:background 0.2s, color 0.2s;
+  border:none;background:transparent;color:var(--muted);
+}
+nav:not(.scrolled) .lang-btn{color:rgba(255,255,255,0.5)}
+.lang-btn.active{background:var(--brand);color:#fff}
+.lang-btn:not(.active):hover{color:var(--text)}
+nav:not(.scrolled) .lang-btn:not(.active):hover{color:#fff}
+
+.nav-cta{
+  font-size:12px;font-weight:600;
+  letter-spacing:0.06em;
+  padding:9px 22px;border-radius:6px;
+  background:var(--brand);color:#fff;
+  text-decoration:none;
+  transition:opacity 0.2s, transform 0.2s;
+  border:none;cursor:pointer;
+}
+nav:not(.scrolled) .nav-cta{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25)}
+.nav-cta:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  padding:120px 60px 80px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  position:relative;overflow:hidden;
+  background:var(--brand);
+}
+
+.hero-grid{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+#hero-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  will-change:transform;
+}
+
+.hero-glow{
+  position:absolute;top:40%;left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:900px;height:500px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.07) 0%,transparent 65%);
+  pointer-events:none;
+  animation:heroGlow 4s ease-in-out infinite;
+  z-index:0;
+}
+
+@keyframes heroGlow{
+  0%,100%{transform:translate(-50%,-50%) scale(1.0)}
+  50%{transform:translate(-50%,-50%) scale(1.08)}
+}
+
+/* Hero staggered entrance */
+@keyframes heroRise{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:10px;font-weight:600;letter-spacing:0.28em;
+  text-transform:uppercase;color:rgba(255,255,255,0.45);
+  margin-bottom:32px;position:relative;z-index:1;
+  opacity:0;
+  animation:heroRise 0.8s 0ms cubic-bezier(.22,1,.36,1) forwards;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';width:28px;height:1px;
+  background:rgba(255,255,255,0.2);
+}
+
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(52px,7vw,96px);
+  font-weight:400;
+  line-height:1.02;letter-spacing:-0.03em;
+  color:#fff;
+  max-width:880px;margin:0 auto 28px;
+  position:relative;z-index:1;
+}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,0.55)}
+
+#h1-a{
+  display:block;
+  opacity:0;
+  animation:heroRise 0.8s 120ms cubic-bezier(.22,1,.36,1) forwards;
+}
+#h1-em{
+  display:block;
+  opacity:0;
+  animation:heroRise 0.8s 240ms cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.hero-sub{
+  font-size:17px;font-weight:300;
+  color:rgba(255,255,255,0.5);
+  max-width:520px;margin:0 auto 52px;
+  line-height:1.78;
+  position:relative;z-index:1;
+  opacity:0;
+  animation:heroRise 0.8s 360ms cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.hero-actions{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  flex-wrap:wrap;margin-bottom:80px;
+  position:relative;z-index:1;
+  opacity:0;
+  animation:heroRise 0.8s 480ms cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.btn-primary{
+  font-size:13px;font-weight:600;letter-spacing:0.05em;
+  padding:14px 32px;border-radius:6px;
+  background:#fff;color:var(--brand);
+  text-decoration:none;border:none;cursor:pointer;
+  transition:opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-2px)}
+
+.btn-outline{
+  font-size:13px;font-weight:500;
+  padding:13px 26px;border-radius:6px;
+  border:1px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.65);
+  text-decoration:none;
+  transition:border-color 0.2s, color 0.2s;
+}
+.btn-outline:hover{border-color:rgba(255,255,255,0.5);color:#fff}
+
+.scroll-hint{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:rgba(255,255,255,0.2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+  animation:heroRise 0.8s 600ms cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0;
+}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.2));animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+
+/* ── REVEAL (scroll animations) ── */
+.reveal{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity 0.7s cubic-bezier(.22,1,.36,1),
+              transform 0.7s cubic-bezier(.22,1,.36,1);
+}
+.reveal.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ── SECTION COMMON ── */
+.sec-label{
+  font-size:10px;font-weight:600;letter-spacing:0.24em;
+  text-transform:uppercase;color:var(--brand);
+  display:block;margin-bottom:16px;opacity:.7;
+}
+.sec-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(30px,4vw,50px);
+  font-weight:400;line-height:1.08;
+  letter-spacing:-0.02em;color:var(--text);
+}
+.sec-title em{font-style:italic;color:var(--brand)}
+
+/* ── MVV ── */
+.mvv{
+  padding:120px 60px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.mvv-inner{max-width:1060px;margin:0 auto}
+.mvv-header{text-align:center;margin-bottom:72px}
+.mvv-header .sec-title{max-width:600px;margin:0 auto}
+
+.mvv-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:1px;
+  background:var(--border);
+  border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+}
+.mvv-item{
+  background:var(--surface);
+  padding:40px 36px;
+  position:relative;
+  overflow:hidden;
+  cursor:default;
+  will-change:transform;
+  transition:background 0.25s, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.mvv-item:hover{
+  background:#FAFAF8;
+  transform:translateY(-3px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.06);
+}
+
+/* Editorial numbering */
+.mvv-item::after{
+  content:attr(data-num);
+  font-family:'Instrument Serif',serif;
+  font-size:6rem;
+  font-weight:400;
+  color:rgba(0,0,0,0.03);
+  position:absolute;
+  bottom:-8px;right:16px;
+  line-height:1;
+  pointer-events:none;
+  user-select:none;
+}
+
+.mvv-overline{
+  font-size:10px;font-weight:600;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--brand);
+  opacity:.6;margin-bottom:12px;
+}
+.mvv-h{
+  font-family:'Instrument Serif',serif;
+  font-size:1.45rem;color:var(--text);
+  margin-bottom:14px;line-height:1.2;
+}
+.mvv-h em{font-style:italic;color:var(--brand)}
+.mvv-p{font-size:13.5px;color:var(--muted);line-height:1.75}
+
+/* values strip */
+.values-strip{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  margin-top:24px;
+}
+.val-item{
+  background:var(--surface);
+  padding:28px 24px;
+  border-left:2px solid transparent;
+  transition:background 0.25s, border-color 0.25s ease;
+  cursor:default;
+}
+.val-item:hover{
+  background:#FAFAF8;
+  border-left:2px solid var(--brand);
+}
+.val-icon{font-size:1.1rem;margin-bottom:12px;display:block}
+.val-name{
+  font-family:'Instrument Serif',serif;
+  font-size:0.95rem;color:var(--text);margin-bottom:6px;
+}
+.val-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── PRODUCTS ── */
+.products{
+  padding:120px 60px;
+  background:var(--bg);
+}
+.products-inner{max-width:1060px;margin:0 auto}
+.products-header{text-align:center;margin-bottom:64px}
+.products-header p{
+  font-size:15px;color:var(--muted);
+  max-width:480px;margin:16px auto 0;line-height:1.75;
+}
+
+.products-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+
+.prod-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;
+  will-change:transform;
+  transition:transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position:relative;
+}
+.prod-card:hover{
+  transform:translateY(-5px);
+  border-color:var(--border-2);
+}
+.prod-card.soon{opacity:.65;cursor:default}
+.prod-card.soon:hover{transform:none;box-shadow:none;border-color:var(--border)}
+
+/* Product-specific hover shadows */
+.prod-card[data-prod="igrejavia"]:not(.soon):hover{box-shadow:0 20px 56px rgba(var(--igrejavia-rgb),0.13)}
+.prod-card[data-prod="sola"]:not(.soon):hover{box-shadow:0 20px 56px rgba(var(--sola-rgb),0.13)}
+.prod-card[data-prod="trainly"]:not(.soon):hover{box-shadow:0 20px 56px rgba(var(--trainly-rgb),0.13)}
+.prod-card[data-prod="clinicly"]:not(.soon):hover{box-shadow:0 20px 56px rgba(var(--clinicly-rgb),0.13)}
+
+.prod-accent{
+  height:5px;width:100%;
+  transition:height 0.25s ease;
+}
+.prod-card:not(.soon):hover .prod-accent{height:8px}
+
+.prod-body{padding:32px 32px 28px;flex:1}
+
+.prod-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+
+.prod-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  transition:transform 0.3s ease;
+}
+.prod-card:not(.soon):hover .prod-icon{transform:scale(1.08)}
+
+.soon-badge{
+  font-size:10px;font-weight:600;letter-spacing:0.1em;
+  text-transform:uppercase;padding:4px 10px;
+  border-radius:20px;border:1px solid var(--border);
+  color:var(--muted);background:var(--bg);
+}
+
+.prod-niche{
+  font-size:10px;font-weight:600;letter-spacing:0.18em;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.prod-name{
+  font-family:'Instrument Serif',serif;
+  font-size:1.55rem;color:var(--text);
+  margin-bottom:10px;line-height:1.1;
+}
+.prod-desc{font-size:13.5px;color:var(--muted);line-height:1.7}
+
+.prod-footer{
+  padding:18px 32px 24px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.prod-cta-text{
+  font-size:12px;font-weight:600;
+  letter-spacing:0.05em;
+}
+.prod-arrow{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--muted);
+  transition:border-color 0.2s, color 0.2s, transform 0.2s;
+}
+.prod-card:not(.soon):hover .prod-arrow{
+  border-color:var(--text);color:var(--text);
+  transform:translateX(3px);
+}
+
+/* product accent colors */
+.prod-card[data-prod="igrejavia"] .prod-accent{background:var(--igrejavia)}
+.prod-card[data-prod="igrejavia"] .prod-icon{background:rgba(45,106,79,.08);border:1px solid rgba(45,106,79,.15)}
+.prod-card[data-prod="igrejavia"] .prod-niche{color:var(--igrejavia)}
+.prod-card[data-prod="igrejavia"] .prod-cta-text{color:var(--igrejavia)}
+
+.prod-card[data-prod="sola"] .prod-accent{background:var(--sola)}
+.prod-card[data-prod="sola"] .prod-icon{background:rgba(92,74,30,.08);border:1px solid rgba(92,74,30,.15)}
+.prod-card[data-prod="sola"] .prod-niche{color:var(--sola)}
+.prod-card[data-prod="sola"] .prod-cta-text{color:var(--sola)}
+
+.prod-card[data-prod="trainly"] .prod-accent{background:var(--trainly)}
+.prod-card[data-prod="trainly"] .prod-icon{background:rgba(26,58,92,.08);border:1px solid rgba(26,58,92,.15)}
+.prod-card[data-prod="trainly"] .prod-niche{color:var(--trainly)}
+.prod-card[data-prod="trainly"] .prod-cta-text{color:var(--trainly)}
+
+.prod-card[data-prod="clinicly"] .prod-accent{background:var(--clinicly)}
+.prod-card[data-prod="clinicly"] .prod-icon{background:rgba(61,90,107,.08);border:1px solid rgba(61,90,107,.15)}
+.prod-card[data-prod="clinicly"] .prod-niche{color:var(--clinicly)}
+.prod-card[data-prod="clinicly"] .prod-cta-text{color:var(--clinicly)}
+
+/* ── WHY ── */
+.why{
+  padding:120px 60px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.why-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.why-left .sec-title{margin-bottom:20px}
+.why-left p{font-size:14.5px;color:var(--muted);line-height:1.8;margin-bottom:14px}
+
+.why-feats{display:flex;flex-direction:column;gap:12px}
+.feat{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:18px 20px;
+  background:var(--bg);
+  border:1px solid var(--border);border-radius:10px;
+  will-change:transform;
+  transition:border-color 0.2s, opacity 0.7s cubic-bezier(.22,1,.36,1), transform 0.7s cubic-bezier(.22,1,.36,1);
+}
+.feat:hover{border-color:var(--border-2)}
+.feat-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:var(--brand-bg);border:1px solid rgba(31,45,64,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.feat-title{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:3px}
+.feat-body{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+/* feat initial state for IntersectionObserver */
+.feat.feat-hidden{opacity:0;transform:translateY(20px)}
+
+/* ── CTA ── */
+.cta-sec{
+  padding:120px 60px;
+  background:var(--brand);
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:400px;height:240px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.07) 0%,transparent 65%);
+  pointer-events:none;
+  animation:heroGlow 4s ease-in-out infinite;
+}
+.cta-sec .sec-label{color:rgba(255,255,255,0.35)}
+.cta-sec .sec-title{
+  color:#fff;
+  max-width:640px;margin:0 auto 20px;
+  position:relative;z-index:1;
+  font-size:clamp(36px,4.5vw,62px);
+}
+.cta-sec .sec-title em{color:rgba(255,255,255,0.5)}
+.cta-p{
+  font-size:15.5px;color:rgba(255,255,255,0.45);
+  max-width:440px;margin:0 auto 48px;
+  line-height:1.75;position:relative;z-index:1;
+}
+.cta-actions{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;position:relative;z-index:1;
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--text);
+  padding:48px 60px;
+  display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:24px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.footer-logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.4rem;color:rgba(255,255,255,0.7);
+  text-decoration:none;
+}
+.footer-verse{
+  font-family:'Instrument Serif',serif;
+  font-style:italic;font-size:0.78rem;
+  color:rgba(255,255,255,0.25);
+  text-align:center;max-width:340px;line-height:1.6;
+}
+.footer-verse span{
+  display:block;font-family:'DM Sans',sans-serif;
+  font-style:normal;font-size:0.62rem;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:rgba(255,255,255,0.15);margin-top:5px;
+}
+.footer-links{display:flex;gap:24px}
+.footer-links a{
+  font-size:12px;color:rgba(255,255,255,0.3);
+  text-decoration:none;transition:color 0.2s;
+}
+.footer-links a:hover{color:rgba(255,255,255,0.7)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  .hero,.mvv,.products,.why,.cta-sec{padding:80px 24px}
+  .mvv-grid,.values-strip,.products-grid,.why-inner{grid-template-columns:1fr}
+  footer{padding:36px 24px;flex-direction:column;align-items:flex-start}
+  .footer-verse{text-align:left}
+}
+
+@media(max-width:640px){
+  .values-strip{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    BittLabs<sup style="font-family:'DM Sans',sans-serif;font-size:0.45rem;font-weight:600;letter-spacing:0.1em;color:var(--muted);vertical-align:super;margin-left:1px">®</sup>
+    <span class="nav-logo-sub" id="nav-sub" data-en="Digital Product Studio" data-pt="Estúdio de Produtos Digitais">Digital Product Studio</span>
+  </a>
+  <div class="nav-links">
+    <a href="#products" id="nav-products" data-en="Products" data-pt="Produtos">Products</a>
+    <a href="#mission" id="nav-mission" data-en="Our mission" data-pt="Nossa missão">Our mission</a>
+    <a href="#why" id="nav-why" data-en="Why BittLabs" data-pt="Por que BittLabs">Why BittLabs</a>
+    <a href="#contact" id="nav-contact" data-en="Contact" data-pt="Contato">Contact</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')" id="btn-en">
+        <svg width="14" height="14" viewBox="0 0 16 16" style="border-radius:50%">
+          <circle cx="8" cy="8" r="8" fill="#B22234"/>
+          <rect y="1.8" width="16" height="1.9" fill="#fff"/>
+          <rect y="5.5" width="16" height="1.9" fill="#fff"/>
+          <rect y="9.2" width="16" height="1.9" fill="#fff"/>
+          <rect y="12.9" width="16" height="1.9" fill="#fff"/>
+          <rect width="6.6" height="8.4" fill="#3C3B6E"/>
+          <g fill="#fff"><circle cx="1.1" cy="1.1" r="0.5"/><circle cx="2.2" cy="1.1" r="0.5"/><circle cx="3.3" cy="1.1" r="0.5"/><circle cx="4.4" cy="1.1" r="0.5"/><circle cx="5.5" cy="1.1" r="0.5"/><circle cx="1.65" cy="2.2" r="0.5"/><circle cx="2.75" cy="2.2" r="0.5"/><circle cx="3.85" cy="2.2" r="0.5"/><circle cx="4.95" cy="2.2" r="0.5"/><circle cx="1.1" cy="3.3" r="0.5"/><circle cx="2.2" cy="3.3" r="0.5"/><circle cx="3.3" cy="3.3" r="0.5"/><circle cx="4.4" cy="3.3" r="0.5"/><circle cx="5.5" cy="3.3" r="0.5"/><circle cx="1.65" cy="4.4" r="0.5"/><circle cx="2.75" cy="4.4" r="0.5"/><circle cx="3.85" cy="4.4" r="0.5"/><circle cx="4.95" cy="4.4" r="0.5"/><circle cx="1.1" cy="5.5" r="0.5"/><circle cx="2.2" cy="5.5" r="0.5"/><circle cx="3.3" cy="5.5" r="0.5"/><circle cx="4.4" cy="5.5" r="0.5"/><circle cx="5.5" cy="5.5" r="0.5"/><circle cx="1.65" cy="6.6" r="0.5"/><circle cx="2.75" cy="6.6" r="0.5"/><circle cx="3.85" cy="6.6" r="0.5"/><circle cx="4.95" cy="6.6" r="0.5"/><circle cx="1.1" cy="7.7" r="0.5"/><circle cx="2.2" cy="7.7" r="0.5"/><circle cx="3.3" cy="7.7" r="0.5"/><circle cx="4.4" cy="7.7" r="0.5"/><circle cx="5.5" cy="7.7" r="0.5"/></g>
+        </svg>
+        EN
+      </button>
+      <button class="lang-btn" onclick="setLang('pt')" id="btn-pt">
+        <svg width="14" height="14" viewBox="0 0 16 16" style="border-radius:50%">
+          <circle cx="8" cy="8" r="8" fill="#009C3B"/>
+          <polygon points="8,1.2 14.8,8 8,14.8 1.2,8" fill="#FEDF00"/>
+          <circle cx="8" cy="8" r="3.4" fill="#002776"/>
+          <path d="M4.8,7.4 Q8,6 11.2,7.4" stroke="white" stroke-width="0.55" fill="none"/>
+        </svg>
+        PT
+      </button>
+    </div>
+    <a href="#contact" class="nav-cta" id="nav-cta" data-en="Get in touch" data-pt="Fale conosco">Get in touch</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"><canvas id="hero-canvas"></canvas></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow" id="hero-eyebrow"
+    data-en="Digital Product Studio · Purpose-driven Technology"
+    data-pt="Estúdio de Produtos Digitais · Tecnologia com Propósito">
+    Digital Product Studio · Purpose-driven Technology
+  </div>
+
+  <h1>
+    <span id="h1-a" data-en="Technology that" data-pt="Tecnologia que">Technology that</span>
+    <em id="h1-em" data-en="serves people." data-pt="serve pessoas.">serves people.</em>
+  </h1>
+
+  <p class="hero-sub" id="hero-sub"
+    data-en="BittLabs builds digital products for organizations and professionals who put people first — churches, health clinics, and fitness coaches."
+    data-pt="A BittLabs cria produtos digitais para organizações e profissionais que colocam pessoas em primeiro lugar — igrejas, clínicas e personal trainers.">
+    BittLabs builds digital products for organizations and professionals who put people first — churches, health clinics, and fitness coaches.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#products" class="btn-primary" id="hero-btn1"
+      data-en="Explore our products →" data-pt="Ver nossos produtos →">Explore our products →</a>
+    <a href="#mission" class="btn-outline" id="hero-btn2"
+      data-en="Our mission" data-pt="Nossa missão">Our mission</a>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MVV -->
+<section class="mvv" id="mission">
+  <div class="mvv-inner">
+    <div class="mvv-header">
+      <span class="sec-label reveal" id="mvv-label" data-en="Who we are" data-pt="Quem somos">Who we are</span>
+      <h2 class="sec-title reveal">
+        <span id="mvv-h2" data-en="Built on purpose." data-pt="Construída com propósito.">Built on purpose.</span>
+        <em id="mvv-em" data-en=" For purpose." data-pt=" Para ter propósito."> For purpose.</em>
+      </h2>
+    </div>
+
+    <div class="mvv-grid">
+      <div class="mvv-item reveal" data-num="01">
+        <div class="mvv-overline" id="mvv-o1" data-en="Mission" data-pt="Missão">Mission</div>
+        <div class="mvv-h">
+          <em id="mvv-h1-em" data-en="Technology" data-pt="Tecnologia">Technology</em>
+          <span id="mvv-h1-rest" data-en=" that serves" data-pt=" que serve"> that serves</span>
+        </div>
+        <p class="mvv-p" id="mvv-p1"
+          data-en="We develop digital products that simplify management and amplify the impact of those who care for people — churches, health professionals, and fitness coaches — with accessible, intentional, and human technology."
+          data-pt="Desenvolvemos produtos digitais que simplificam a gestão e ampliam o impacto de quem cuida de pessoas — igrejas, profissionais de saúde e educadores físicos — com tecnologia acessível, intencional e humana.">
+          We develop digital products that simplify management and amplify the impact of those who care for people — churches, health professionals, and fitness coaches — with accessible, intentional, and human technology.
+        </p>
+      </div>
+      <div class="mvv-item reveal" data-num="02">
+        <div class="mvv-overline" id="mvv-o2" data-en="Vision" data-pt="Visão">Vision</div>
+        <div class="mvv-h">
+          <em id="mvv-h2-em" data-en="The most trusted" data-pt="O estúdio mais confiável">The most trusted</em>
+          <span id="mvv-h2-rest" data-en=" studio" data-pt=""> studio</span>
+        </div>
+        <p class="mvv-p" id="mvv-p2"
+          data-en="To be recognized as the most trusted digital product studio for organizations and professionals who build their businesses and ministries with purpose — not just with technology."
+          data-pt="Ser reconhecida como o estúdio de produtos digitais mais confiável para organizações e profissionais que constroem seus negócios e ministérios com propósito — não apenas com tecnologia.">
+          To be recognized as the most trusted digital product studio for organizations and professionals who build their businesses and ministries with purpose — not just with technology.
+        </p>
+      </div>
+      <div class="mvv-item reveal" data-num="03">
+        <div class="mvv-overline" id="mvv-o3" data-en="Foundation" data-pt="Fundação">Foundation</div>
+        <div class="mvv-h">
+          <em id="mvv-h3-em" data-en="Faith-driven," data-pt="Movida pela fé,">Faith-driven,</em>
+          <span id="mvv-h3-rest" data-en=" human-first" data-pt=" humana primeiro"> human-first</span>
+        </div>
+        <p class="mvv-p" id="mvv-p3"
+          data-en="We believe that serving people well is a way of honoring God. Every product we build carries this conviction — in its design, in its pricing, and in the way we support our customers."
+          data-pt="Acreditamos que servir bem ao próximo é uma forma de honrar a Deus. Cada produto que construímos carrega essa convicção — no design, nos preços e na forma como apoiamos nossos clientes.">
+          We believe that serving people well is a way of honoring God. Every product we build carries this conviction — in its design, in its pricing, and in the way we support our customers.
+        </p>
+      </div>
+    </div>
+
+    <!-- Values -->
+    <div class="values-strip">
+      <div class="val-item reveal">
+        <span class="val-icon">🎯</span>
+        <div class="val-name" id="v1-name" data-en="Purpose over profit" data-pt="Propósito antes de lucro">Purpose over profit</div>
+        <div class="val-desc" id="v1-desc" data-en="We build technology that serves, not exploits." data-pt="Construímos tecnologia que serve, não que explora.">We build technology that serves, not exploits.</div>
+      </div>
+      <div class="val-item reveal">
+        <span class="val-icon">✦</span>
+        <div class="val-name" id="v2-name" data-en="Simplicity as respect" data-pt="Simplicidade como respeito">Simplicity as respect</div>
+        <div class="val-desc" id="v2-desc" data-en="Simple interfaces are an act of care." data-pt="Interfaces simples são um ato de cuidado.">Simple interfaces are an act of care.</div>
+      </div>
+      <div class="val-item reveal">
+        <span class="val-icon">⬡</span>
+        <div class="val-name" id="v3-name" data-en="Excellence with humility" data-pt="Excelência com humildade">Excellence with humility</div>
+        <div class="val-desc" id="v3-desc" data-en="Our best, without technical arrogance." data-pt="Nosso melhor, sem arrogância técnica.">Our best, without technical arrogance.</div>
+      </div>
+      <div class="val-item reveal">
+        <span class="val-icon">✝</span>
+        <div class="val-name" id="v4-name" data-en="Faith as foundation" data-pt="Fé como fundação">Faith as foundation</div>
+        <div class="val-desc" id="v4-desc" data-en="Serving well is a way of honoring God." data-pt="Servir bem é uma forma de honrar a Deus.">Serving well is a way of honoring God.</div>
+      </div>
+      <div class="val-item reveal">
+        <span class="val-icon">🌱</span>
+        <div class="val-name" id="v5-name" data-en="Real impact, real scale" data-pt="Impacto real, escala possível">Real impact, real scale</div>
+        <div class="val-desc" id="v5-desc" data-en="We start local, but build to grow." data-pt="Começamos pelo local, mas construímos para crescer.">We start local, but build to grow.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="products-inner">
+    <div class="products-header">
+      <span class="sec-label reveal" id="prod-label" data-en="Our products" data-pt="Nossos produtos">Our products</span>
+      <h2 class="sec-title reveal">
+        <span id="prod-h2" data-en="Four products." data-pt="Quatro produtos.">Four products.</span>
+        <em id="prod-em" data-en=" One purpose." data-pt=" Um propósito."> One purpose.</em>
+      </h2>
+      <p id="prod-sub" class="reveal"
+        data-en="Each product is built for a specific context — but all share the same DNA: simplicity, purpose, and care for people."
+        data-pt="Cada produto é construído para um contexto específico — mas todos compartilham o mesmo DNA: simplicidade, propósito e cuidado com pessoas.">
+        Each product is built for a specific context — but all share the same DNA: simplicity, purpose, and care for people.
+      </p>
+    </div>
+
+    <div class="products-grid">
+
+      <!-- IgrejaViva -->
+      <a href="igrejavia.html" class="prod-card reveal" data-prod="igrejavia">
+        <div class="prod-accent"></div>
+        <div class="prod-body">
+          <div class="prod-top">
+            <div class="prod-icon">⛪</div>
+          </div>
+          <div class="prod-niche" id="p1-niche" data-en="Church Management" data-pt="Gestão de Igrejas">Church Management</div>
+          <div class="prod-name">IgrejaViva</div>
+          <p class="prod-desc" id="p1-desc"
+            data-en="A complete SaaS platform for evangelical churches that puts pastoral care above administration. Member management, financials, Kids module, and a pastor command center — all in one place."
+            data-pt="Uma plataforma SaaS completa para igrejas evangélicas que coloca o cuidado pastoral acima da administração. Gestão de membros, financeiro, módulo Kids e painel do pastor — tudo em um só lugar.">
+            A complete SaaS platform for evangelical churches that puts pastoral care above administration. Member management, financials, Kids module, and a pastor command center — all in one place.
+          </p>
+        </div>
+        <div class="prod-footer">
+          <div class="prod-cta-text" id="p1-cta" data-en="Learn more" data-pt="Saiba mais">Learn more</div>
+          <div class="prod-arrow">→</div>
+        </div>
+      </a>
+
+      <!-- SolaScriptura -->
+      <a href="solascriptura.html" class="prod-card reveal" data-prod="sola">
+        <div class="prod-accent"></div>
+        <div class="prod-body">
+          <div class="prod-top">
+            <div class="prod-icon">📖</div>
+          </div>
+          <div class="prod-niche" id="p2-niche" data-en="Biblical Studies" data-pt="Estudos Bíblicos">Biblical Studies</div>
+          <div class="prod-name">SolaScriptura</div>
+          <p class="prod-desc" id="p2-desc"
+            data-en="A deep Bible study platform where the Word of God is studied with depth. Search tools, curated library, and structured study paths for those who take Scripture seriously."
+            data-pt="Uma plataforma de estudos bíblicos aprofundados onde a Palavra de Deus é estudada com profundidade. Ferramentas de busca, biblioteca curada e trilhas de estudo para quem leva as Escrituras a sério.">
+            A deep Bible study platform where the Word of God is studied with depth. Search tools, curated library, and structured study paths for those who take Scripture seriously.
+          </p>
+        </div>
+        <div class="prod-footer">
+          <div class="prod-cta-text" id="p2-cta" data-en="Learn more" data-pt="Saiba mais">Learn more</div>
+          <div class="prod-arrow">→</div>
+        </div>
+      </a>
+
+      <!-- Trainly -->
+      <a href="trainly.html" class="prod-card reveal" data-prod="trainly">
+        <div class="prod-accent"></div>
+        <div class="prod-body">
+          <div class="prod-top">
+            <div class="prod-icon">🏃</div>
+          </div>
+          <div class="prod-niche" id="p3-niche" data-en="Personal Training" data-pt="Personal Training">Personal Training</div>
+          <div class="prod-name">Trainly</div>
+          <p class="prod-desc" id="p3-desc"
+            data-en="Client management platform built for personal trainers. Agile, intuitive, and easy for both trainer and client — scheduling, progress tracking, and communication in one clean interface."
+            data-pt="Plataforma de gestão de alunos para personal trainers. Ágil, intuitiva e fácil tanto para o profissional quanto para o aluno — agendamento, acompanhamento e comunicação em uma interface limpa.">
+            Client management platform built for personal trainers. Agile, intuitive, and easy for both trainer and client — scheduling, progress tracking, and communication in one clean interface.
+          </p>
+        </div>
+        <div class="prod-footer">
+          <div class="prod-cta-text" id="p3-cta" data-en="Learn more" data-pt="Saiba mais">Learn more</div>
+          <div class="prod-arrow">→</div>
+        </div>
+      </a>
+
+      <!-- Clinicly -->
+      <a href="clinicly.html" class="prod-card reveal" data-prod="clinicly">
+        <div class="prod-accent"></div>
+        <div class="prod-body">
+          <div class="prod-top">
+            <div class="prod-icon">🩺</div>
+          </div>
+          <div class="prod-niche" id="p4-niche" data-en="Health Clinics" data-pt="Clínicas de Saúde">Health Clinics</div>
+          <div class="prod-name">Clinicly</div>
+          <p class="prod-desc" id="p4-desc"
+            data-en="WhatsApp-powered automation for dental and medical clinics. Reduce no-shows, automate appointment reminders, and give patients a friction-free experience — without replacing your team."
+            data-pt="Automação via WhatsApp para clínicas dentárias e médicas. Reduza faltas, automatize lembretes de consulta e ofereça uma experiência sem atrito aos pacientes — sem substituir sua equipe.">
+            WhatsApp-powered automation for dental and medical clinics. Reduce no-shows, automate appointment reminders, and give patients a friction-free experience — without replacing your team.
+          </p>
+        </div>
+        <div class="prod-footer">
+          <div class="prod-cta-text" id="p4-cta" data-en="Learn more" data-pt="Saiba mais">Learn more</div>
+          <div class="prod-arrow">→</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY BITTLABS -->
+<section class="why" id="why">
+  <div class="why-inner">
+    <div class="why-left">
+      <span class="sec-label reveal" id="why-label" data-en="Why BittLabs" data-pt="Por que BittLabs">Why BittLabs</span>
+      <h2 class="sec-title reveal">
+        <span id="why-h2" data-en="We build with" data-pt="Construímos com">We build with</span><br>
+        <em id="why-em" data-en="intention." data-pt="intenção.">intention.</em>
+      </h2>
+      <p id="why-p1"
+        data-en="Most tools are built to capture market share. BittLabs products are built to serve. That changes everything — from how we design interfaces to how we price our plans."
+        data-pt="A maioria das ferramentas é construída para capturar mercado. Os produtos BittLabs são construídos para servir. Isso muda tudo — desde como desenhamos as interfaces até como precificamos os planos.">
+        Most tools are built to capture market share. BittLabs products are built to serve. That changes everything — from how we design interfaces to how we price our plans.
+      </p>
+      <p id="why-p2"
+        data-en="We're a small studio with a big conviction: technology should empower people, not overwhelm them."
+        data-pt="Somos um estúdio pequeno com uma convicção grande: a tecnologia deve empoderar pessoas, não sobrecarregá-las.">
+        We're a small studio with a big conviction: technology should empower people, not overwhelm them.
+      </p>
+    </div>
+    <div class="why-feats">
+      <div class="feat feat-hidden">
+        <div class="feat-icon">✦</div>
+        <div>
+          <div class="feat-title" id="wf1-t" data-en="Human-centered design" data-pt="Design centrado no humano">Human-centered design</div>
+          <div class="feat-body" id="wf1-b" data-en="Every screen is designed for the person who will actually use it — not for the demo." data-pt="Cada tela é desenhada para quem vai realmente usá-la — não para o demo.">Every screen is designed for the person who will actually use it — not for the demo.</div>
+        </div>
+      </div>
+      <div class="feat feat-hidden">
+        <div class="feat-icon">🎯</div>
+        <div>
+          <div class="feat-title" id="wf2-t" data-en="Niche-specific, not generic" data-pt="Específico por nicho, não genérico">Niche-specific, not generic</div>
+          <div class="feat-body" id="wf2-b" data-en="Each product understands its context deeply. A pastor's dashboard is not a clinic's dashboard." data-pt="Cada produto entende profundamente seu contexto. O painel de um pastor não é o painel de uma clínica.">Each product understands its context deeply. A pastor's dashboard is not a clinic's dashboard.</div>
+        </div>
+      </div>
+      <div class="feat feat-hidden">
+        <div class="feat-icon">💬</div>
+        <div>
+          <div class="feat-title" id="wf3-t" data-en="Honest pricing" data-pt="Preços honestos">Honest pricing</div>
+          <div class="feat-body" id="wf3-b" data-en="No hidden fees, no dark patterns. Our pricing pages say exactly what you pay and why." data-pt="Sem taxas ocultas, sem padrões obscuros. Nossas páginas de preço dizem exatamente o que você paga e por quê.">No hidden fees, no dark patterns. Our pricing pages say exactly what you pay and why.</div>
+        </div>
+      </div>
+      <div class="feat feat-hidden">
+        <div class="feat-icon">🌱</div>
+        <div>
+          <div class="feat-title" id="wf4-t" data-en="Built to last" data-pt="Construído para durar">Built to last</div>
+          <div class="feat-body" id="wf4-b" data-en="We don't chase trends. We build solid products that organizations can depend on for years." data-pt="Não seguimos tendências. Construímos produtos sólidos em que organizações podem confiar por anos.">We don't chase trends. We build solid products that organizations can depend on for years.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec" id="contact">
+  <div class="cta-glow"></div>
+  <span class="sec-label" id="cta-label" data-en="Get started" data-pt="Comece agora">Get started</span>
+  <h2 class="sec-title">
+    <span id="cta-h2" data-en="Ready to build something" data-pt="Pronto para construir algo">Ready to build something</span><br>
+    <em id="cta-em" data-en="that matters?" data-pt="que importa?">that matters?</em>
+  </h2>
+  <p class="cta-p" id="cta-sub"
+    data-en="Whether you're a church leader, a personal trainer, or a clinic owner — there's a BittLabs product made for you."
+    data-pt="Seja você um líder de igreja, personal trainer ou dono de clínica — há um produto BittLabs feito para você.">
+    Whether you're a church leader, a personal trainer, or a clinic owner — there's a BittLabs product made for you.
+  </p>
+  <div class="cta-actions">
+    <a href="mailto:hello@bittlabs.com" class="btn-primary" id="cta-btn"
+      data-en="Contact us →" data-pt="Fale conosco →">Contact us →</a>
+    <a href="#products" class="btn-outline" id="cta-btn2"
+      data-en="See our products" data-pt="Ver os produtos">See our products</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">BittLabs<sup style="font-size:0.5rem;vertical-align:super;margin-left:1px;opacity:.5">®</sup></a>
+  <div class="footer-verse">
+    "Tudo o que fizerem, façam de todo o coração, como para o Senhor, não para os homens."
+    <span>Colossenses 3:23 · NVI</span>
+  </div>
+  <div class="footer-links">
+    <a href="#" id="fl-privacy" data-en="Privacy" data-pt="Privacidade">Privacy</a>
+    <a href="#" id="fl-terms" data-en="Terms" data-pt="Termos">Terms</a>
+    <a href="mailto:hello@bittlabs.com" id="fl-contact" data-en="Contact" data-pt="Contato">Contact</a>
+    <a href="#" id="fl-copy" data-en="© 2026 BittLabs" data-pt="© 2026 BittLabs">© 2026 BittLabs</a>
+  </div>
+</footer>
+
+<script>
+// ── AUTO LANGUAGE DETECTION ──
+const PT_LOCALES = ['pt','pt-BR','pt-PT','pt-AO','pt-MZ','pt-CV','pt-GW','pt-ST','pt-TL','pt-GQ'];
+const browserLang = navigator.language || navigator.userLanguage || 'en';
+let lang = PT_LOCALES.some(l => browserLang.toLowerCase().startsWith(l.toLowerCase())) ? 'pt' : 'en';
+
+const IDS = [
+  'nav-sub','nav-products','nav-mission','nav-why','nav-contact','nav-cta',
+  'hero-eyebrow','h1-a','h1-em','hero-sub','hero-btn1','hero-btn2',
+  'mvv-label','mvv-h2','mvv-em',
+  'mvv-o1','mvv-h1-em','mvv-h1-rest','mvv-p1',
+  'mvv-o2','mvv-h2-em','mvv-h2-rest','mvv-p2',
+  'mvv-o3','mvv-h3-em','mvv-h3-rest','mvv-p3',
+  'v1-name','v1-desc','v2-name','v2-desc','v3-name','v3-desc',
+  'v4-name','v4-desc','v5-name','v5-desc',
+  'prod-label','prod-h2','prod-em','prod-sub',
+  'p1-niche','p1-desc','p1-cta',
+  'p2-niche','p2-desc','p2-cta',
+  'p3-niche','p3-desc','p3-cta',
+  'p4-niche','p4-desc','p4-cta',
+  'why-label','why-h2','why-em','why-p1','why-p2',
+  'wf1-t','wf1-b','wf2-t','wf2-b','wf3-t','wf3-b','wf4-t','wf4-b',
+  'cta-label','cta-h2','cta-em','cta-sub','cta-btn','cta-btn2',
+  'fl-privacy','fl-terms','fl-contact','fl-copy',
+];
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.getElementById('btn-pt').classList.toggle('active', l === 'pt');
+  IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.getAttribute('data-' + l);
+    if (val !== null) el.textContent = val;
+  });
+  document.documentElement.lang = l === 'pt' ? 'pt-BR' : 'en';
+}
+
+// Apply detected language on load
+setLang(lang);
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// ── SCROLL REVEAL ──
+(function(){
+  const revealEls = document.querySelectorAll('.reveal');
+
+  // Apply stagger delays for val-items and prod-cards
+  document.querySelectorAll('.val-item.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i * 60) + 'ms';
+  });
+  document.querySelectorAll('.prod-card.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i * 80) + 'ms';
+  });
+
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => revealObs.observe(el));
+})();
+
+// ── WHY FEATS INTERSECTION ──
+(function(){
+  const feats = document.querySelectorAll('.feat.feat-hidden');
+
+  const featObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(feats).indexOf(entry.target);
+        entry.target.style.transitionDelay = (idx * 80) + 'ms';
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+        featObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  feats.forEach(el => featObs.observe(el));
+})();
+
+// ── HERO GRID CANVAS ──
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const CELL = 56;
+  let W, H, cols, rows;
+  let mouse = { x: -9999, y: -9999 };
+  let t = 0;
+  let rafId = null;
+  let running = true;
+
+  let points = [];
+
+  function resize() {
+    const hero = canvas.parentElement.parentElement;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+    cols = Math.ceil(W / CELL) + 1;
+    rows = Math.ceil(H / CELL) + 1;
+
+    points = [];
+    for (let r = 0; r < rows; r++) {
+      points[r] = [];
+      for (let c = 0; c < cols; c++) {
+        points[r][c] = {
+          phase:  Math.random() * Math.PI * 2,
+          speed:  0.3 + Math.random() * 0.4,
+          amp:    0.012 + Math.random() * 0.018,
+        };
+      }
+    }
+  }
+
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  const heroEl = canvas.parentElement.parentElement;
+  heroEl.addEventListener('mousemove', e => {
+    const rect = heroEl.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  }, { passive: true });
+  heroEl.addEventListener('mouseleave', () => {
+    mouse.x = -9999; mouse.y = -9999;
+  });
+
+  // Pause when tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      running = false;
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    } else {
+      running = true;
+      draw();
+    }
+  });
+
+  function draw() {
+    if (!running) return;
+    ctx.clearRect(0, 0, W, H);
+    t += 0.012;
+
+    // Draw horizontal lines
+    for (let r = 0; r < rows; r++) {
+      const y = r * CELL;
+      for (let c = 1; c < cols; c++) {
+        const x = c * CELL;
+        const p = points[r][c];
+
+        const wave = Math.sin(t * p.speed + p.phase + c * 0.3) * p.amp + 0.025;
+        const dx = x - mouse.x, dy = y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const proximity = Math.max(0, 1 - dist / 180);
+        const alpha = Math.min(wave + proximity * 0.18, 0.22);
+
+        ctx.beginPath();
+        ctx.moveTo((c-1)*CELL, y);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = 'rgba(255,255,255,' + alpha + ')';
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
+    }
+
+    // Draw vertical lines
+    for (let c = 0; c < cols; c++) {
+      const x = c * CELL;
+      for (let r = 0; r < rows - 1; r++) {
+        const y = r * CELL;
+        const p = points[r][c];
+
+        const wave = Math.sin(t * p.speed + p.phase + r * 0.3) * p.amp + 0.025;
+        const dx = x - mouse.x, dy = y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const proximity = Math.max(0, 1 - dist / 180);
+        const alpha = Math.min(wave + proximity * 0.18, 0.22);
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + CELL);
+        ctx.strokeStyle = 'rgba(255,255,255,' + alpha + ')';
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
+    }
+
+    rafId = requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>
