@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criação de Sites — BittLabs</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:       #F7F6F3;
+  --surface:  #FFFFFF;
+  --border:   #E4E2DC;
+  --border-2: #D4D1C8;
+  --text:     #1A1916;
+  --body:     #4A4844;
+  --muted:    #9B9892;
+  --brand:    #1F2D40;
+  --brand-bg: #EBF0F7;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  line-height:1.65;
+  background:var(--bg);
+  color:var(--body);
+  overflow-x:hidden;
+}
+
+.serif{font-family:'Instrument Serif',serif;font-weight:400}
+
+/* ── TOP BAR ── */
+.top-bar{
+  background:#1F2D40;
+  padding:10px 60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  font-family:'DM Sans',sans-serif;
+  font-weight:500;
+}
+.top-bar a{
+  color:rgba(255,255,255,0.6);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+.top-bar a:hover{color:#fff}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;left:0;right:0;z-index:200;
+  height:68px;padding:0 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+nav.scrolled{
+  background:rgba(247,246,243,0.94);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+
+.nav-logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.7rem;color:var(--brand);
+  text-decoration:none;letter-spacing:-0.02em;line-height:1;
+}
+nav:not(.scrolled) .nav-logo{color:#fff}
+
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{
+  font-size:13px;font-weight:500;
+  letter-spacing:0.02em;color:var(--muted);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+nav:not(.scrolled) .nav-links a{color:rgba(255,255,255,0.5)}
+nav:not(.scrolled) .nav-links a:hover{color:#fff}
+.nav-links a:hover{color:var(--text)}
+
+.nav-right{display:flex;align-items:center;gap:14px}
+
+.lang-toggle{
+  display:flex;align-items:center;gap:3px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:24px;padding:3px;
+}
+nav:not(.scrolled) .lang-toggle{
+  background:rgba(255,255,255,0.1);
+  border-color:rgba(255,255,255,0.15);
+}
+.lang-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:20px;
+  font-size:11px;font-weight:600;letter-spacing:0.06em;
+  cursor:pointer;
+  transition:background 0.2s, color 0.2s;
+  border:none;background:transparent;color:var(--muted);
+}
+nav:not(.scrolled) .lang-btn{color:rgba(255,255,255,0.5)}
+.lang-btn.active{background:var(--brand);color:#fff}
+.lang-btn:not(.active):hover{color:var(--text)}
+nav:not(.scrolled) .lang-btn:not(.active):hover{color:#fff}
+
+.nav-cta{
+  font-size:12px;font-weight:600;
+  letter-spacing:0.06em;
+  padding:9px 22px;border-radius:6px;
+  background:var(--brand);color:#fff;
+  text-decoration:none;
+  transition:opacity 0.2s, transform 0.2s;
+  border:none;cursor:pointer;
+}
+nav:not(.scrolled) .nav-cta{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25)}
+.nav-cta:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  padding:120px 60px 80px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  position:relative;overflow:hidden;
+  background:var(--brand);
+}
+
+.hero-grid{
+  position:absolute;inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+#hero-canvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+  will-change:transform;
+}
+
+.hero-glow{
+  position:absolute;top:40%;left:50%;
+  transform:translate(-50%,-50%) scale(1);
+  width:900px;height:500px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.07) 0%,transparent 65%);
+  pointer-events:none;
+  animation:heroGlow 4s ease-in-out infinite;
+  z-index:0;
+}
+
+@keyframes heroGlow{
+  0%,100%{transform:translate(-50%,-50%) scale(1.0)}
+  50%{transform:translate(-50%,-50%) scale(1.08)}
+}
+
+@keyframes heroRise{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:10px;font-weight:600;letter-spacing:0.28em;
+  text-transform:uppercase;color:rgba(255,255,255,0.45);
+  margin-bottom:32px;position:relative;z-index:1;
+  opacity:0;
+  animation:heroRise 0.8s 0ms cubic-bezier(.22,1,.36,1) forwards;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{
+  content:'';width:28px;height:1px;
+  background:rgba(255,255,255,0.2);
+}
+
+.hero h1{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(52px,7vw,96px);
+  font-weight:400;
+  line-height:1.02;letter-spacing:-0.03em;
+  color:#fff;
+  max-width:880px;margin:0 auto 28px;
+  position:relative;z-index:1;
+}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,0.55)}
+
+#h1-a{
+  display:block;
+  opacity:0;
+  animation:heroRise 0.8s 120ms cubic-bezier(.22,1,.36,1) forwards;
+}
+#h1-em{
+  display:block;
+  opacity:0;
+  animation:heroRise 0.8s 240ms cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.hero-sub{
+  font-size:17px;font-weight:300;
+  color:rgba(255,255,255,0.5);
+  max-width:520px;margin:0 auto 52px;
+  line-height:1.78;
+  position:relative;z-index:1;
+  opacity:0;
+  animation:heroRise 0.8s 360ms cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.hero-actions{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  flex-wrap:wrap;margin-bottom:80px;
+  position:relative;z-index:1;
+  opacity:0;
+  animation:heroRise 0.8s 480ms cubic-bezier(.22,1,.36,1) forwards;
+}
+
+.btn-primary{
+  font-size:13px;font-weight:600;letter-spacing:0.05em;
+  padding:14px 32px;border-radius:6px;
+  background:#fff;color:var(--brand);
+  text-decoration:none;border:none;cursor:pointer;
+  transition:opacity 0.2s, transform 0.2s;
+}
+.btn-primary:hover{opacity:.88;transform:translateY(-2px)}
+
+.btn-outline{
+  font-size:13px;font-weight:500;
+  padding:13px 26px;border-radius:6px;
+  border:1px solid rgba(255,255,255,0.2);
+  color:rgba(255,255,255,0.65);
+  text-decoration:none;
+  transition:border-color 0.2s, color 0.2s;
+}
+.btn-outline:hover{border-color:rgba(255,255,255,0.5);color:#fff}
+
+.scroll-hint{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:rgba(255,255,255,0.2);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+  animation:heroRise 0.8s 600ms cubic-bezier(.22,1,.36,1) forwards;
+  opacity:0;
+}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,0.2));animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+
+/* ── REVEAL ── */
+.reveal{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity 0.7s cubic-bezier(.22,1,.36,1),
+              transform 0.7s cubic-bezier(.22,1,.36,1);
+}
+.reveal.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ── SECTION COMMON ── */
+.sec-label{
+  font-size:10px;font-weight:600;letter-spacing:0.24em;
+  text-transform:uppercase;color:var(--brand);
+  display:block;margin-bottom:16px;opacity:.7;
+}
+.sec-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(30px,4vw,50px);
+  font-weight:400;line-height:1.08;
+  letter-spacing:-0.02em;color:var(--text);
+}
+.sec-title em{font-style:italic;color:var(--brand)}
+
+/* ── POR QUE ── */
+.por-que{
+  padding:120px 60px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.por-que-inner{max-width:1060px;margin:0 auto}
+.por-que-header{text-align:center;margin-bottom:72px}
+.por-que-header .sec-title{max-width:600px;margin:0 auto}
+
+.porq-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:48px 40px;
+}
+.porq-item{position:relative}
+.porq-num{
+  font-family:'Instrument Serif',serif;
+  font-size:4rem;
+  color:var(--brand);
+  opacity:0.15;
+  line-height:1;
+  margin-bottom:12px;
+}
+.porq-title{
+  font-family:'Instrument Serif',serif;
+  font-size:1.4rem;
+  color:var(--text);
+  margin-bottom:10px;
+  line-height:1.2;
+}
+.porq-desc{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.75;
+}
+
+/* ── PACOTES ── */
+.pacotes{
+  padding:120px 60px;
+  background:var(--bg);
+}
+.pacotes-inner{max-width:1060px;margin:0 auto}
+.pacotes-header{text-align:center;margin-bottom:64px}
+.pacotes-header p{
+  font-size:15px;color:var(--muted);
+  max-width:480px;margin:16px auto 0;line-height:1.75;
+}
+
+.plans-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:20px;
+  align-items:start;
+}
+
+.plan-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  position:relative;
+  will-change:transform;
+  transition:transform 0.25s ease, box-shadow 0.25s ease;
+}
+.plan-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 48px rgba(0,0,0,0.08);
+}
+.plan-card.featured{
+  border:2px solid var(--brand);
+}
+.plan-card.featured:hover{
+  box-shadow:0 16px 48px rgba(31,45,64,0.15);
+}
+
+.plan-badge{
+  background:var(--brand);
+  color:#fff;
+  font-size:10px;font-weight:600;letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:5px 14px;
+  display:inline-block;
+  border-radius:0 0 8px 0;
+  position:absolute;top:0;left:0;
+}
+
+.plan-body{
+  padding:36px 32px 28px;
+}
+.plan-card.featured .plan-body{
+  padding-top:48px;
+}
+
+.plan-name{
+  font-family:'Instrument Serif',serif;
+  font-size:1.4rem;
+  color:var(--text);
+  margin-bottom:4px;
+}
+.plan-price{
+  font-family:'Instrument Serif',serif;
+  font-size:2.6rem;
+  color:var(--text);
+  line-height:1;
+  margin:12px 0 4px;
+}
+.plan-price-note{
+  font-size:12px;color:var(--muted);margin-bottom:4px;
+}
+.plan-subtitle{
+  font-size:13px;
+  color:var(--muted);
+  font-style:italic;
+  margin-bottom:14px;
+}
+.plan-ideal{
+  font-size:12px;
+  color:var(--body);
+  margin-bottom:20px;
+  padding:10px 14px;
+  background:var(--bg);
+  border-radius:6px;
+  border:1px solid var(--border);
+}
+.plan-ideal strong{
+  font-weight:600;
+  color:var(--text);
+  display:block;
+  margin-bottom:2px;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+
+.plan-features{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:28px;
+}
+.plan-features li{
+  font-size:13px;
+  color:var(--body);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.plan-features li.has{color:var(--body)}
+.plan-features li.missing{color:var(--muted)}
+.feat-mark{
+  width:18px;height:18px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-size:11px;
+  font-weight:700;
+}
+.feat-mark.yes{
+  background:var(--brand-bg);
+  color:var(--brand);
+}
+.feat-mark.no{
+  background:#F2F1EE;
+  color:var(--muted);
+}
+
+.plan-cta{
+  display:block;
+  text-align:center;
+  padding:13px 24px;
+  border-radius:8px;
+  font-size:13px;font-weight:600;
+  letter-spacing:0.04em;
+  text-decoration:none;
+  transition:opacity 0.2s, transform 0.2s;
+  background:var(--brand);
+  color:#fff;
+}
+.plan-cta:hover{opacity:.85;transform:translateY(-1px)}
+
+/* ── PRESENCA ONLINE ── */
+.presenca{
+  padding:120px 60px;
+  background:var(--brand-bg);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.presenca-inner{max-width:700px;margin:0 auto}
+
+.presenca-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:48px;
+  text-align:center;
+}
+
+.presenca-name{
+  font-family:'Instrument Serif',serif;
+  font-size:1.8rem;
+  color:var(--text);
+  margin-bottom:8px;
+}
+.presenca-price{
+  font-family:'Instrument Serif',serif;
+  font-size:2.8rem;
+  color:var(--text);
+  line-height:1;
+  margin:12px 0 6px;
+}
+.presenca-price-note{
+  font-size:12px;color:var(--muted);margin-bottom:16px;
+}
+.presenca-desc{
+  font-size:14.5px;
+  color:var(--muted);
+  line-height:1.75;
+  max-width:500px;
+  margin:0 auto 28px;
+}
+
+.presenca-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+  margin-bottom:32px;
+}
+.presenca-pill{
+  font-size:12px;font-weight:500;
+  padding:6px 14px;
+  border-radius:20px;
+  background:var(--brand-bg);
+  border:1px solid rgba(31,45,64,0.12);
+  color:var(--brand);
+}
+
+.presenca-note{
+  margin-top:20px;
+  font-size:12px;
+  color:var(--muted);
+  font-style:italic;
+}
+
+/* ── COMO FUNCIONA ── */
+.como{
+  padding:120px 60px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.como-inner{max-width:1060px;margin:0 auto}
+.como-header{text-align:center;margin-bottom:72px}
+
+.steps-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:40px;
+}
+
+.step{position:relative}
+.step-num{
+  font-family:'Instrument Serif',serif;
+  font-size:3.5rem;
+  color:var(--brand);
+  opacity:0.15;
+  line-height:1;
+  margin-bottom:12px;
+}
+.step-title{
+  font-family:'Instrument Serif',serif;
+  font-size:1.2rem;
+  color:var(--text);
+  margin-bottom:8px;
+  line-height:1.25;
+}
+.step-desc{
+  font-size:13.5px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* ── CONTATO ── */
+.contato{
+  padding:120px 60px;
+  background:var(--bg);
+}
+.contato-inner{
+  max-width:1060px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  align-items:start;
+}
+.contato-left .sec-title{margin-bottom:20px}
+.contato-left > p{
+  font-size:14.5px;
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:24px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:18px;
+}
+.form-label{
+  font-size:12px;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--body);
+}
+.form-input,
+.form-select,
+.form-textarea{
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  color:var(--text);
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:11px 14px;
+  outline:none;
+  transition:border-color 0.2s;
+  width:100%;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus{
+  border-color:var(--brand);
+}
+.form-textarea{
+  resize:vertical;
+  min-height:90px;
+}
+.form-select{
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239B9892' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  padding-right:36px;
+}
+
+.form-submit{
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  letter-spacing:0.05em;
+  padding:14px 32px;
+  border-radius:8px;
+  background:var(--brand);color:#fff;
+  border:none;cursor:pointer;
+  transition:opacity 0.2s, transform 0.2s;
+  width:100%;
+}
+.form-submit:hover{opacity:.85;transform:translateY(-1px)}
+
+.contato-wa{
+  display:block;
+  margin-top:16px;
+  font-size:13px;
+  color:var(--muted);
+  text-decoration:none;
+  transition:color 0.2s;
+}
+.contato-wa:hover{color:var(--brand)}
+
+.contato-right{
+  padding-top:16px;
+}
+.contato-info-title{
+  font-family:'Instrument Serif',serif;
+  font-size:1.3rem;
+  color:var(--text);
+  margin-bottom:16px;
+}
+.contato-info-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.contato-info-list li{
+  font-size:14px;
+  color:var(--muted);
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  line-height:1.6;
+}
+.info-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--brand);
+  opacity:0.4;
+  flex-shrink:0;
+  margin-top:8px;
+}
+
+/* ── CTA FINAL ── */
+.cta-sec{
+  padding:120px 60px;
+  background:var(--brand);
+  text-align:center;position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:400px;height:240px;
+  background:radial-gradient(ellipse,rgba(255,255,255,0.07) 0%,transparent 65%);
+  pointer-events:none;
+  animation:heroGlow 4s ease-in-out infinite;
+}
+.cta-sec .sec-title{
+  color:#fff;
+  max-width:640px;margin:0 auto 20px;
+  position:relative;z-index:1;
+  font-size:clamp(36px,4.5vw,62px);
+}
+.cta-sec .sec-title em{color:rgba(255,255,255,0.5)}
+.cta-p{
+  font-size:15.5px;color:rgba(255,255,255,0.45);
+  max-width:440px;margin:0 auto 48px;
+  line-height:1.75;position:relative;z-index:1;
+}
+.cta-actions{
+  display:flex;align-items:center;justify-content:center;
+  gap:14px;flex-wrap:wrap;position:relative;z-index:1;
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--text);
+  padding:48px 60px;
+  display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:24px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.footer-logo{
+  font-family:'Instrument Serif',serif;
+  font-size:1.4rem;color:rgba(255,255,255,0.7);
+  text-decoration:none;
+}
+.footer-center{
+  font-family:'DM Sans',sans-serif;
+  font-size:0.7rem;
+  letter-spacing:0.06em;
+  color:rgba(255,255,255,0.25);
+  text-align:center;
+}
+.footer-links{display:flex;gap:24px}
+.footer-links a{
+  font-size:12px;color:rgba(255,255,255,0.3);
+  text-decoration:none;transition:color 0.2s;
+}
+.footer-links a:hover{color:rgba(255,255,255,0.7)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .top-bar{padding:10px 24px}
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  .hero,.por-que,.pacotes,.presenca,.como,.contato,.cta-sec{padding:80px 24px}
+  .porq-grid{grid-template-columns:1fr}
+  .plans-grid{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .contato-inner{grid-template-columns:1fr;gap:48px}
+  footer{padding:36px 24px;flex-direction:column;align-items:flex-start}
+  .footer-center{text-align:left}
+}
+
+@media(max-width:640px){
+  .steps-grid{grid-template-columns:1fr}
+  .presenca-card{padding:32px 24px}
+  .hero-actions{flex-direction:column;align-items:stretch;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <span>Um serviço BittLabs<sup>®</sup></span>
+  <a href="bittlabs_home_v4.html">BittLabs</a>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    BittLabs<sup style="font-family:'DM Sans',sans-serif;font-size:0.45rem;font-weight:600;letter-spacing:0.1em;vertical-align:super;margin-left:1px;opacity:.6">®</sup>
+  </a>
+  <div class="nav-links">
+    <a href="#por-que" id="nav-porq" data-en="Why a site?" data-pt="Por que ter um site?">Por que ter um site?</a>
+    <a href="#pacotes" id="nav-pac" data-en="Packages" data-pt="Pacotes">Pacotes</a>
+    <a href="#como-funciona" id="nav-como" data-en="How it works" data-pt="Como funciona">Como funciona</a>
+    <a href="#contato" id="nav-cont" data-en="Contact" data-pt="Contato">Contato</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-toggle">
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en">
+        <svg width="14" height="14" viewBox="0 0 16 16" style="border-radius:50%">
+          <circle cx="8" cy="8" r="8" fill="#B22234"/>
+          <rect y="1.8" width="16" height="1.9" fill="#fff"/>
+          <rect y="5.5" width="16" height="1.9" fill="#fff"/>
+          <rect y="9.2" width="16" height="1.9" fill="#fff"/>
+          <rect y="12.9" width="16" height="1.9" fill="#fff"/>
+          <rect width="6.6" height="8.4" fill="#3C3B6E"/>
+          <g fill="#fff"><circle cx="1.1" cy="1.1" r="0.5"/><circle cx="2.2" cy="1.1" r="0.5"/><circle cx="3.3" cy="1.1" r="0.5"/><circle cx="4.4" cy="1.1" r="0.5"/><circle cx="5.5" cy="1.1" r="0.5"/><circle cx="1.65" cy="2.2" r="0.5"/><circle cx="2.75" cy="2.2" r="0.5"/><circle cx="3.85" cy="2.2" r="0.5"/><circle cx="4.95" cy="2.2" r="0.5"/><circle cx="1.1" cy="3.3" r="0.5"/><circle cx="2.2" cy="3.3" r="0.5"/><circle cx="3.3" cy="3.3" r="0.5"/><circle cx="4.4" cy="3.3" r="0.5"/><circle cx="5.5" cy="3.3" r="0.5"/><circle cx="1.65" cy="4.4" r="0.5"/><circle cx="2.75" cy="4.4" r="0.5"/><circle cx="3.85" cy="4.4" r="0.5"/><circle cx="4.95" cy="4.4" r="0.5"/><circle cx="1.1" cy="5.5" r="0.5"/><circle cx="2.2" cy="5.5" r="0.5"/><circle cx="3.3" cy="5.5" r="0.5"/><circle cx="4.4" cy="5.5" r="0.5"/><circle cx="5.5" cy="5.5" r="0.5"/><circle cx="1.65" cy="6.6" r="0.5"/><circle cx="2.75" cy="6.6" r="0.5"/><circle cx="3.85" cy="6.6" r="0.5"/><circle cx="4.95" cy="6.6" r="0.5"/><circle cx="1.1" cy="7.7" r="0.5"/><circle cx="2.2" cy="7.7" r="0.5"/><circle cx="3.3" cy="7.7" r="0.5"/><circle cx="4.4" cy="7.7" r="0.5"/><circle cx="5.5" cy="7.7" r="0.5"/></g>
+        </svg>
+        EN
+      </button>
+      <button class="lang-btn active" onclick="setLang('pt')" id="btn-pt">
+        <svg width="14" height="14" viewBox="0 0 16 16" style="border-radius:50%">
+          <circle cx="8" cy="8" r="8" fill="#009C3B"/>
+          <polygon points="8,1.2 14.8,8 8,14.8 1.2,8" fill="#FEDF00"/>
+          <circle cx="8" cy="8" r="3.4" fill="#002776"/>
+          <path d="M4.8,7.4 Q8,6 11.2,7.4" stroke="white" stroke-width="0.55" fill="none"/>
+        </svg>
+        PT
+      </button>
+    </div>
+    <a href="https://wa.me/5521979886644" class="nav-cta" id="nav-cta"
+      data-en="Talk on WhatsApp" data-pt="Falar no WhatsApp"
+      target="_blank" rel="noopener">Falar no WhatsApp</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"><canvas id="hero-canvas"></canvas></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-eyebrow" id="hero-eyebrow"
+    data-en="Website Creation · BittLabs"
+    data-pt="Criação de Sites · BittLabs">
+    Criação de Sites · BittLabs
+  </div>
+
+  <h1>
+    <span id="h1-a" data-en="Your business deserves" data-pt="Seu negócio merece">Seu negócio merece</span>
+    <em id="h1-em" data-en="to be online." data-pt="estar online.">estar online.</em>
+  </h1>
+
+  <p class="hero-sub" id="hero-sub"
+    data-en="We create professional websites, fast and Google-optimized — for small businesses that want to grow."
+    data-pt="Criamos sites profissionais, rápidos e que aparecem no Google — para pequenos negócios que querem crescer.">
+    Criamos sites profissionais, rápidos e que aparecem no Google — para pequenos negócios que querem crescer.
+  </p>
+
+  <div class="hero-actions">
+    <a href="#pacotes" class="btn-primary" id="hero-btn1"
+      data-en="See packages →" data-pt="Ver pacotes →">Ver pacotes →</a>
+    <a href="https://wa.me/5521979886644" class="btn-outline" id="hero-btn2"
+      data-en="Talk on WhatsApp" data-pt="Falar no WhatsApp"
+      target="_blank" rel="noopener">Falar no WhatsApp</a>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- POR QUE TER UM SITE -->
+<section class="por-que" id="por-que">
+  <div class="por-que-inner">
+    <div class="por-que-header">
+      <span class="sec-label reveal" id="porq-label" data-en="Why it matters" data-pt="Por que importa">Por que importa</span>
+      <h2 class="sec-title reveal">
+        <span id="porq-h2" data-en="Why have a" data-pt="Por que ter um">Por que ter um</span>
+        <em id="porq-em" data-en=" website?" data-pt=" site?"> site?</em>
+      </h2>
+    </div>
+
+    <div class="porq-grid">
+      <div class="porq-item reveal">
+        <div class="porq-num">01</div>
+        <div class="porq-title" id="pq1-t" data-en="You show up on Google" data-pt="Você aparece no Google">Você aparece no Google</div>
+        <p class="porq-desc" id="pq1-d" data-en="Customers find you when searching for your service." data-pt="Clientes te encontram quando pesquisam pelo seu serviço.">Clientes te encontram quando pesquisam pelo seu serviço.</p>
+      </div>
+      <div class="porq-item reveal">
+        <div class="porq-num">02</div>
+        <div class="porq-title" id="pq2-t" data-en="Works 24/7" data-pt="Funciona 24 horas">Funciona 24 horas</div>
+        <p class="porq-desc" id="pq2-d" data-en="Your business works even when you're not around." data-pt="Seu negócio trabalha mesmo quando você não está.">Seu negócio trabalha mesmo quando você não está.</p>
+      </div>
+      <div class="porq-item reveal">
+        <div class="porq-num">03</div>
+        <div class="porq-title" id="pq3-t" data-en="Builds credibility" data-pt="Passa credibilidade">Passa credibilidade</div>
+        <p class="porq-desc" id="pq3-d" data-en="Professionalism that converts visitors into customers." data-pt="Profissionalismo que converte visitante em cliente.">Profissionalismo que converte visitante em cliente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACOTES -->
+<section class="pacotes" id="pacotes">
+  <div class="pacotes-inner">
+    <div class="pacotes-header">
+      <span class="sec-label reveal" id="pac-label" data-en="Packages" data-pt="Pacotes">Pacotes</span>
+      <h2 class="sec-title reveal">
+        <span id="pac-h2" data-en="Choose your" data-pt="Escolha seu">Escolha seu</span>
+        <em id="pac-em" data-en=" plan." data-pt=" pacote."> pacote.</em>
+      </h2>
+      <p id="pac-sub" class="reveal"
+        data-en="All packages include responsive design and a fast, professional website."
+        data-pt="Todos os pacotes incluem design responsivo e um site rápido e profissional.">
+        Todos os pacotes incluem design responsivo e um site rápido e profissional.
+      </p>
+    </div>
+
+    <div class="plans-grid">
+
+      <!-- Essencial -->
+      <div class="plan-card reveal">
+        <div class="plan-body">
+          <div class="plan-name" id="plan1-name" data-en="Essential" data-pt="Essencial">Essencial</div>
+          <div class="plan-price">R$790</div>
+          <div class="plan-price-note" id="plan1-pnote" data-en="one-time payment" data-pt="pagamento único">pagamento único</div>
+          <div class="plan-subtitle" id="plan1-sub" data-en="You exist online" data-pt="Você existe online">Você existe online</div>
+          <div class="plan-ideal">
+            <strong id="plan1-ideal-l" data-en="Ideal for" data-pt="Ideal para">Ideal para</strong>
+            <span id="plan1-ideal" data-en="Salons, freelancers, small shops" data-pt="Salões, autônomos, pequenos comércios">Salões, autônomos, pequenos comércios</span>
+          </div>
+          <ul class="plan-features">
+            <li class="has"><span class="feat-mark yes">+</span><span id="f1-1" data-en="Up to 4 sections" data-pt="Até 4 seções">Até 4 seções</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f1-2" data-en="WhatsApp button" data-pt="Botão WhatsApp">Botão WhatsApp</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f1-3" data-en="Google Maps" data-pt="Google Maps">Google Maps</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f1-4" data-en="Responsive design" data-pt="Responsivo">Responsivo</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f1-5" data-en="Contact form" data-pt="Formulário de contato">Formulário de contato</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f1-6" data-en="Photo gallery" data-pt="Galeria de fotos">Galeria de fotos</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f1-7" data-en="Basic SEO" data-pt="SEO básico">SEO básico</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f1-8" data-en="Google Business setup" data-pt="Google Meu Negócio">Google Meu Negócio</span></li>
+          </ul>
+          <a href="https://wa.me/5521979886644?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Pacote%20Essencial."
+            class="plan-cta" id="plan1-cta"
+            data-en="Get started →" data-pt="Quero este pacote →"
+            target="_blank" rel="noopener">Quero este pacote →</a>
+        </div>
+      </div>
+
+      <!-- Profissional -->
+      <div class="plan-card featured reveal">
+        <div class="plan-badge" id="plan2-badge" data-en="Most popular" data-pt="Mais escolhido">Mais escolhido</div>
+        <div class="plan-body">
+          <div class="plan-name" id="plan2-name" data-en="Professional" data-pt="Profissional">Profissional</div>
+          <div class="plan-price">R$1.490</div>
+          <div class="plan-price-note" id="plan2-pnote" data-en="one-time payment" data-pt="pagamento único">pagamento único</div>
+          <div class="plan-subtitle" id="plan2-sub" data-en="You stand out online" data-pt="Você se destaca online">Você se destaca online</div>
+          <div class="plan-ideal">
+            <strong id="plan2-ideal-l" data-en="Ideal for" data-pt="Ideal para">Ideal para</strong>
+            <span id="plan2-ideal" data-en="Clinics, gyms, restaurants" data-pt="Clínicas, academias, restaurantes">Clínicas, academias, restaurantes</span>
+          </div>
+          <ul class="plan-features">
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-1" data-en="Up to 6 sections" data-pt="Até 6 seções">Até 6 seções</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-2" data-en="WhatsApp button" data-pt="Botão WhatsApp">Botão WhatsApp</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-3" data-en="Google Maps" data-pt="Google Maps">Google Maps</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-4" data-en="Responsive design" data-pt="Responsivo">Responsivo</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-5" data-en="Contact form" data-pt="Formulário de contato">Formulário de contato</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-6" data-en="Photo gallery" data-pt="Galeria de fotos">Galeria de fotos</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-7" data-en="Basic SEO" data-pt="SEO básico">SEO básico</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f2-8" data-en="Google Business setup" data-pt="Google Meu Negócio configurado">Google Meu Negócio configurado</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f2-9" data-en="Interactive feature" data-pt="Funcionalidade interativa">Funcionalidade interativa</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f2-10" data-en="Advanced local SEO" data-pt="SEO local avançado">SEO local avançado</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f2-11" data-en="Meta Pixel" data-pt="Pixel Meta">Pixel Meta</span></li>
+            <li class="missing"><span class="feat-mark no">—</span><span id="f2-12" data-en="Schema markup" data-pt="Schema markup">Schema markup</span></li>
+          </ul>
+          <a href="https://wa.me/5521979886644?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Pacote%20Profissional."
+            class="plan-cta" id="plan2-cta"
+            data-en="Get started →" data-pt="Quero este pacote →"
+            target="_blank" rel="noopener">Quero este pacote →</a>
+        </div>
+      </div>
+
+      <!-- Autoridade -->
+      <div class="plan-card reveal">
+        <div class="plan-body">
+          <div class="plan-name" id="plan3-name" data-en="Authority" data-pt="Autoridade">Autoridade</div>
+          <div class="plan-price">R$2.490</div>
+          <div class="plan-price-note" id="plan3-pnote" data-en="one-time payment" data-pt="pagamento único">pagamento único</div>
+          <div class="plan-subtitle" id="plan3-sub" data-en="You convert online" data-pt="Você converte online">Você converte online</div>
+          <div class="plan-ideal">
+            <strong id="plan3-ideal-l" data-en="Ideal for" data-pt="Ideal para">Ideal para</strong>
+            <span id="plan3-ideal" data-en="Businesses ready for real growth" data-pt="Negócios que querem crescer de verdade">Negócios que querem crescer de verdade</span>
+          </div>
+          <ul class="plan-features">
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-1" data-en="Unlimited sections" data-pt="Seções ilimitadas">Seções ilimitadas</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-2" data-en="WhatsApp button" data-pt="Botão WhatsApp">Botão WhatsApp</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-3" data-en="Google Maps" data-pt="Google Maps">Google Maps</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-4" data-en="Responsive design" data-pt="Responsivo">Responsivo</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-5" data-en="Contact form" data-pt="Formulário de contato">Formulário de contato</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-6" data-en="Photo gallery" data-pt="Galeria de fotos">Galeria de fotos</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-7" data-en="Basic SEO" data-pt="SEO básico">SEO básico</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-8" data-en="Google Business setup" data-pt="Google Meu Negócio configurado">Google Meu Negócio configurado</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-9" data-en="Interactive feature" data-pt="Funcionalidade interativa">Funcionalidade interativa</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-10" data-en="Advanced local SEO" data-pt="SEO local avançado">SEO local avançado</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-11" data-en="Meta Pixel" data-pt="Pixel Meta">Pixel Meta</span></li>
+            <li class="has"><span class="feat-mark yes">+</span><span id="f3-12" data-en="Schema markup" data-pt="Schema markup">Schema markup</span></li>
+          </ul>
+          <a href="https://wa.me/5521979886644?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Pacote%20Autoridade."
+            class="plan-cta" id="plan3-cta"
+            data-en="Get started →" data-pt="Quero este pacote →"
+            target="_blank" rel="noopener">Quero este pacote →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PLANO DE PRESENÇA ONLINE -->
+<section class="presenca">
+  <div class="presenca-inner">
+    <div class="presenca-card reveal">
+      <span class="sec-label" id="pres-label" data-en="Monthly plan" data-pt="Plano mensal">Plano mensal</span>
+      <div class="presenca-name" id="pres-name"
+        data-en="Online Presence Plan"
+        data-pt="Plano de Presença Online">Plano de Presença Online</div>
+      <div class="presenca-price">R$97</div>
+      <div class="presenca-price-note" id="pres-pnote" data-en="per month" data-pt="por mês">por mês</div>
+      <p class="presenca-desc" id="pres-desc"
+        data-en="Hosting, maintenance, content updates and ongoing support. Your site always live, always current."
+        data-pt="Hospedagem, manutenção, atualizações de conteúdo e suporte contínuo. Seu site sempre no ar, sempre atualizado.">
+        Hospedagem, manutenção, atualizações de conteúdo e suporte contínuo. Seu site sempre no ar, sempre atualizado.
+      </p>
+      <div class="presenca-pills">
+        <span class="presenca-pill" id="pp1" data-en="Hosting" data-pt="Hospedagem">Hospedagem</span>
+        <span class="presenca-pill" id="pp2" data-en="SSL" data-pt="SSL">SSL</span>
+        <span class="presenca-pill" id="pp3" data-en="Monthly backup" data-pt="Backup mensal">Backup mensal</span>
+        <span class="presenca-pill" id="pp4" data-en="Up to 2 updates/month" data-pt="Até 2 atualizações/mês">Até 2 atualizações/mês</span>
+        <span class="presenca-pill" id="pp5" data-en="WhatsApp support" data-pt="Suporte via WhatsApp">Suporte via WhatsApp</span>
+      </div>
+      <a href="https://wa.me/5521979886644?text=Ol%C3%A1!%20Tenho%20interesse%20no%20Plano%20de%20Presen%C3%A7a%20Online."
+        class="plan-cta" id="pres-cta"
+        data-en="Learn more →" data-pt="Quero saber mais →"
+        target="_blank" rel="noopener">Quero saber mais →</a>
+      <p class="presenca-note" id="pres-note"
+        data-en="Available to clients of any package."
+        data-pt="Disponível para clientes de qualquer pacote.">
+        Disponível para clientes de qualquer pacote.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="como" id="como-funciona">
+  <div class="como-inner">
+    <div class="como-header">
+      <span class="sec-label reveal" id="como-label" data-en="The process" data-pt="O processo">O processo</span>
+      <h2 class="sec-title reveal">
+        <span id="como-h2" data-en="How it" data-pt="Como">Como</span>
+        <em id="como-em" data-en=" works." data-pt=" funciona."> funciona.</em>
+      </h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-title" id="s1-t" data-en="You get in touch" data-pt="Você entra em contato">Você entra em contato</div>
+        <p class="step-desc" id="s1-d" data-en="WhatsApp or form" data-pt="WhatsApp ou formulário">WhatsApp ou formulário</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-title" id="s2-t" data-en="We align the project" data-pt="Alinhamos o projeto">Alinhamos o projeto</div>
+        <p class="step-desc" id="s2-d" data-en="Quick call to understand your business." data-pt="Reunião rápida para entender o negócio.">Reunião rápida para entender o negócio.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-title" id="s3-t" data-en="We build your site" data-pt="Desenvolvemos o site">Desenvolvemos o site</div>
+        <p class="step-desc" id="s3-d" data-en="7 to 15 business days." data-pt="Prazo de 7 a 15 dias úteis.">Prazo de 7 a 15 dias úteis.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <div class="step-title" id="s4-t" data-en="Your site goes live" data-pt="Seu site vai ao ar">Seu site vai ao ar</div>
+        <p class="step-desc" id="s4-d" data-en="With launch support." data-pt="Com suporte no lançamento.">Com suporte no lançamento.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section class="contato" id="contato">
+  <div class="contato-inner">
+    <div class="contato-left">
+      <span class="sec-label reveal" id="cont-label" data-en="Get in touch" data-pt="Fale conosco">Fale conosco</span>
+      <h2 class="sec-title reveal">
+        <span id="cont-h2" data-en="Let's build your" data-pt="Vamos criar">Vamos criar</span>
+        <em id="cont-em" data-en=" site together." data-pt=" seu site."> seu site.</em>
+      </h2>
+      <p id="cont-sub" class="reveal"
+        data-en="Fill in the form and we'll get back to you on WhatsApp."
+        data-pt="Preencha o formulário e entraremos em contato pelo WhatsApp.">
+        Preencha o formulário e entraremos em contato pelo WhatsApp.
+      </p>
+
+      <form id="contact-form" onsubmit="submitForm(event)" style="margin-top:32px">
+        <div class="form-group">
+          <label class="form-label" for="f-nome" id="fl-nome" data-en="Name" data-pt="Nome">Nome</label>
+          <input class="form-input" type="text" id="f-nome" required
+            data-en-placeholder="Your name" data-pt-placeholder="Seu nome"
+            placeholder="Seu nome">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-wa">WhatsApp</label>
+          <input class="form-input" type="tel" id="f-wa" required
+            data-en-placeholder="Your WhatsApp" data-pt-placeholder="Seu WhatsApp"
+            placeholder="Seu WhatsApp">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-tipo" id="fl-tipo"
+            data-en="Business type" data-pt="Tipo de negócio">Tipo de negócio</label>
+          <select class="form-select" id="f-tipo" required>
+            <option value="" id="fo-default" data-en="Select..." data-pt="Selecione...">Selecione...</option>
+            <option value="Salão/Barbearia" id="fo-1" data-en="Salon/Barbershop" data-pt="Salão/Barbearia">Salão/Barbearia</option>
+            <option value="Clínica/Consultório" id="fo-2" data-en="Clinic/Office" data-pt="Clínica/Consultório">Clínica/Consultório</option>
+            <option value="Academia/Personal" id="fo-3" data-en="Gym/Personal trainer" data-pt="Academia/Personal">Academia/Personal</option>
+            <option value="Restaurante/Lanchonete" id="fo-4" data-en="Restaurant/Snack bar" data-pt="Restaurante/Lanchonete">Restaurante/Lanchonete</option>
+            <option value="Comércio local" id="fo-5" data-en="Local commerce" data-pt="Comércio local">Comércio local</option>
+            <option value="Outro" id="fo-6" data-en="Other" data-pt="Outro">Outro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-pacote" id="fl-pac"
+            data-en="Package of interest" data-pt="Pacote de interesse">Pacote de interesse</label>
+          <select class="form-select" id="f-pacote" required>
+            <option value="" id="fp-default" data-en="Select..." data-pt="Selecione...">Selecione...</option>
+            <option value="Essencial" id="fp-1" data-en="Essential" data-pt="Essencial">Essencial</option>
+            <option value="Profissional" id="fp-2" data-en="Professional" data-pt="Profissional">Profissional</option>
+            <option value="Autoridade" id="fp-3" data-en="Authority" data-pt="Autoridade">Autoridade</option>
+            <option value="Não sei ainda" id="fp-4" data-en="Not sure yet" data-pt="Não sei ainda">Não sei ainda</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-msg" id="fl-msg"
+            data-en="Message (optional)" data-pt="Mensagem (opcional)">Mensagem (opcional)</label>
+          <textarea class="form-textarea" id="f-msg" rows="3"
+            data-en-placeholder="Tell us a bit about your business..."
+            data-pt-placeholder="Conte um pouco sobre seu negócio..."
+            placeholder="Conte um pouco sobre seu negócio..."></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="form-submit"
+          data-en="Send message →" data-pt="Enviar mensagem →">Enviar mensagem →</button>
+      </form>
+
+      <a href="https://wa.me/5521979886644" class="contato-wa" id="cont-wa"
+        data-en="Or talk directly on WhatsApp →"
+        data-pt="Ou fale direto no WhatsApp →"
+        target="_blank" rel="noopener">Ou fale direto no WhatsApp →</a>
+    </div>
+
+    <div class="contato-right reveal">
+      <div class="contato-info-title" id="ci-title"
+        data-en="What to expect" data-pt="O que esperar">O que esperar</div>
+      <ul class="contato-info-list">
+        <li>
+          <div class="info-dot"></div>
+          <span id="ci-1" data-en="We respond within 24 business hours." data-pt="Respondemos em até 24 horas úteis.">Respondemos em até 24 horas úteis.</span>
+        </li>
+        <li>
+          <div class="info-dot"></div>
+          <span id="ci-2" data-en="No commitment required to receive a proposal." data-pt="Sem compromisso para receber uma proposta.">Sem compromisso para receber uma proposta.</span>
+        </li>
+        <li>
+          <div class="info-dot"></div>
+          <span id="ci-3" data-en="We work remotely with clients across Brazil." data-pt="Atendemos clientes em todo o Brasil, 100% remoto.">Atendemos clientes em todo o Brasil, 100% remoto.</span>
+        </li>
+        <li>
+          <div class="info-dot"></div>
+          <span id="ci-4" data-en="Delivery in 7 to 15 business days after approval." data-pt="Entrega em 7 a 15 dias úteis após aprovação.">Entrega em 7 a 15 dias úteis após aprovação.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-sec">
+  <div class="cta-glow"></div>
+  <h2 class="sec-title reveal">
+    <span id="cta-h2" data-en="Ready to go" data-pt="Pronto para existir">Pronto para existir</span>
+    <em id="cta-em" data-en=" online?" data-pt=" online?"> online?</em>
+  </h2>
+  <p class="cta-p reveal" id="cta-sub"
+    data-en="Get in touch and receive a custom proposal."
+    data-pt="Entre em contato e receba uma proposta personalizada.">
+    Entre em contato e receba uma proposta personalizada.
+  </p>
+  <div class="cta-actions reveal">
+    <a href="https://wa.me/5521979886644" class="btn-primary" id="cta-btn"
+      data-en="Talk on WhatsApp →" data-pt="Falar no WhatsApp →"
+      target="_blank" rel="noopener">Falar no WhatsApp →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="bittlabs_home_v4.html" class="footer-logo">
+    BittLabs<sup style="font-size:0.5rem;vertical-align:super;margin-left:1px;opacity:.5">®</sup>
+  </a>
+  <div class="footer-center" id="footer-center"
+    data-en="A BittLabs service · © 2026 BittLabs"
+    data-pt="Um serviço BittLabs · © 2026 BittLabs">
+    Um serviço BittLabs · © 2026 BittLabs
+  </div>
+  <div class="footer-links">
+    <a href="#" id="fl-privacy" data-en="Privacy" data-pt="Privacidade">Privacidade</a>
+    <a href="#" id="fl-terms" data-en="Terms" data-pt="Termos">Termos</a>
+    <a href="mailto:hello@bittlabs.com" id="fl-contact" data-en="Contact" data-pt="Contato">Contato</a>
+    <a href="bittlabs_home_v4.html" id="fl-home" data-en="BittLabs" data-pt="BittLabs">BittLabs</a>
+  </div>
+</footer>
+
+<script>
+// ── LANGUAGE SYSTEM ──
+const PT_LOCALES = ['pt','pt-BR','pt-PT','pt-AO','pt-MZ','pt-CV','pt-GW','pt-ST','pt-TL','pt-GQ'];
+const browserLang = navigator.language || navigator.userLanguage || 'pt';
+let lang = PT_LOCALES.some(l => browserLang.toLowerCase().startsWith(l.toLowerCase())) ? 'pt' : 'en';
+
+const IDS = [
+  'nav-porq','nav-pac','nav-como','nav-cont','nav-cta',
+  'hero-eyebrow','h1-a','h1-em','hero-sub','hero-btn1','hero-btn2',
+  'porq-label','porq-h2','porq-em',
+  'pq1-t','pq1-d','pq2-t','pq2-d','pq3-t','pq3-d',
+  'pac-label','pac-h2','pac-em','pac-sub',
+  'plan1-name','plan1-pnote','plan1-sub','plan1-ideal-l','plan1-ideal','plan1-cta',
+  'f1-1','f1-2','f1-3','f1-4','f1-5','f1-6','f1-7','f1-8',
+  'plan2-name','plan2-pnote','plan2-sub','plan2-ideal-l','plan2-ideal','plan2-badge','plan2-cta',
+  'f2-1','f2-2','f2-3','f2-4','f2-5','f2-6','f2-7','f2-8','f2-9','f2-10','f2-11','f2-12',
+  'plan3-name','plan3-pnote','plan3-sub','plan3-ideal-l','plan3-ideal','plan3-cta',
+  'f3-1','f3-2','f3-3','f3-4','f3-5','f3-6','f3-7','f3-8','f3-9','f3-10','f3-11','f3-12',
+  'pres-label','pres-name','pres-pnote','pres-desc','pres-cta','pres-note',
+  'pp1','pp2','pp3','pp4','pp5',
+  'como-label','como-h2','como-em',
+  's1-t','s1-d','s2-t','s2-d','s3-t','s3-d','s4-t','s4-d',
+  'cont-label','cont-h2','cont-em','cont-sub',
+  'fl-nome','fl-tipo','fl-pac','fl-msg','form-submit','cont-wa',
+  'fo-default','fo-1','fo-2','fo-3','fo-4','fo-5','fo-6',
+  'fp-default','fp-1','fp-2','fp-3','fp-4',
+  'ci-title','ci-1','ci-2','ci-3','ci-4',
+  'cta-h2','cta-em','cta-sub','cta-btn',
+  'footer-center','fl-privacy','fl-terms','fl-contact','fl-home',
+];
+
+const PLACEHOLDER_IDS = [
+  { id: 'f-nome' },
+  { id: 'f-wa' },
+  { id: 'f-msg' },
+];
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btn-en').classList.toggle('active', l === 'en');
+  document.getElementById('btn-pt').classList.toggle('active', l === 'pt');
+  IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.getAttribute('data-' + l);
+    if (val !== null) el.textContent = val;
+  });
+  // Update placeholders
+  PLACEHOLDER_IDS.forEach(({ id }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const ph = el.getAttribute('data-' + l + '-placeholder');
+    if (ph) el.placeholder = ph;
+  });
+  document.documentElement.lang = l === 'pt' ? 'pt-BR' : 'en';
+}
+
+setLang(lang);
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });
+
+// ── SCROLL REVEAL ──
+(function(){
+  const revealEls = document.querySelectorAll('.reveal');
+  document.querySelectorAll('.plan-card.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i * 80) + 'ms';
+  });
+  document.querySelectorAll('.step.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i * 70) + 'ms';
+  });
+  document.querySelectorAll('.porq-item.reveal').forEach((el, i) => {
+    el.style.transitionDelay = (i * 70) + 'ms';
+  });
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  revealEls.forEach(el => obs.observe(el));
+})();
+
+// ── FORM SUBMIT → WHATSAPP ──
+function submitForm(e) {
+  e.preventDefault();
+  const nome = document.getElementById('f-nome').value;
+  const wa = document.getElementById('f-wa').value;
+  const tipo = document.getElementById('f-tipo').value;
+  const pacote = document.getElementById('f-pacote').value;
+  const msg = document.getElementById('f-msg').value;
+  const text = encodeURIComponent(
+    'Olá! Vim pelo site da BittLabs.\n\n' +
+    'Nome: ' + nome + '\n' +
+    'WhatsApp: ' + wa + '\n' +
+    'Tipo de negócio: ' + tipo + '\n' +
+    'Pacote: ' + pacote +
+    (msg ? '\nMensagem: ' + msg : '')
+  );
+  window.open('https://wa.me/5521979886644?text=' + text, '_blank');
+}
+
+// ── HERO GRID CANVAS ──
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  const CELL = 56;
+  let W, H, cols, rows;
+  let mouse = { x: -9999, y: -9999 };
+  let t = 0;
+  let rafId = null;
+  let running = true;
+  let points = [];
+
+  function resize() {
+    const hero = canvas.parentElement.parentElement;
+    W = canvas.width  = hero.offsetWidth;
+    H = canvas.height = hero.offsetHeight;
+    cols = Math.ceil(W / CELL) + 1;
+    rows = Math.ceil(H / CELL) + 1;
+
+    points = [];
+    for (let r = 0; r < rows; r++) {
+      points[r] = [];
+      for (let c = 0; c < cols; c++) {
+        points[r][c] = {
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.3 + Math.random() * 0.4,
+          amp:   0.012 + Math.random() * 0.018,
+        };
+      }
+    }
+  }
+
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  const heroEl = canvas.parentElement.parentElement;
+  heroEl.addEventListener('mousemove', e => {
+    const rect = heroEl.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  }, { passive: true });
+  heroEl.addEventListener('mouseleave', () => {
+    mouse.x = -9999; mouse.y = -9999;
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      running = false;
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    } else {
+      running = true;
+      draw();
+    }
+  });
+
+  function draw() {
+    if (!running) return;
+    ctx.clearRect(0, 0, W, H);
+    t += 0.012;
+
+    // Horizontal lines
+    for (let r = 0; r < rows; r++) {
+      const y = r * CELL;
+      for (let c = 1; c < cols; c++) {
+        const x = c * CELL;
+        const p = points[r][c];
+        const wave = Math.sin(t * p.speed + p.phase + c * 0.3) * p.amp + 0.025;
+        const dx = x - mouse.x, dy = y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const proximity = Math.max(0, 1 - dist / 180);
+        const alpha = Math.min(wave + proximity * 0.18, 0.22);
+        ctx.beginPath();
+        ctx.moveTo((c-1)*CELL, y);
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = 'rgba(255,255,255,' + alpha + ')';
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
+    }
+
+    // Vertical lines
+    for (let c = 0; c < cols; c++) {
+      const x = c * CELL;
+      for (let r = 0; r < rows - 1; r++) {
+        const y = r * CELL;
+        const p = points[r][c];
+        const wave = Math.sin(t * p.speed + p.phase + r * 0.3) * p.amp + 0.025;
+        const dx = x - mouse.x, dy = y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const proximity = Math.max(0, 1 - dist / 180);
+        const alpha = Math.min(wave + proximity * 0.18, 0.22);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y + CELL);
+        ctx.strokeStyle = 'rgba(255,255,255,' + alpha + ')';
+        ctx.lineWidth = 0.7;
+        ctx.stroke();
+      }
+    }
+
+    rafId = requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+</script>
+</body>
+</html>
